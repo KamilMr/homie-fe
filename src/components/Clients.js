@@ -7,6 +7,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Select,
+  MenuItem,
   TextField,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,21 +16,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const HEADS = ['Nr.','Name', 'Price', 'Time', ''];
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const URL = 'http://localhost:1234/';
 
 const createEmptyClient = () => ({
   'name': '',
   'surname': '',
-  'price': null,
-  'start': null,
-  'time': null,
-  'week_day': null,
+  'price': '',
+  'start': '',
+  'time': '',
+  'week_day': '',
 });
 
 const Clients = props => {
   const [clients, setClients] = useState();
-  const [client, setClient] = useState();
+  const [client, setClient] = useState(createEmptyClient());
   const [add, setAdd] = useState(false);
   const [download, setDownload] = useState(true);
 
@@ -68,7 +70,7 @@ const Clients = props => {
       .then(res => res.json())
       .then(res => console.log(res))
     setDownload(true);
-    setClient(null)
+    setClient(createEmptyClient())
     setAdd(false)
   };
 
@@ -81,12 +83,21 @@ const Clients = props => {
         <div>
           {['name', 'surname', 'price', 'time'].map(t => (
             <TextField
+              key={t}
               label={t}
               size="small"
               value={client && client[t]}
               onChange={handleAddClientChange(t)}
             />
           ))}
+          <Select
+            value={client?.week_day}
+            onChange={handleAddClientChange('week_day')}
+          >
+            {DAYS.map((d, idx) => (
+              <MenuItem key={d} value={idx}>{d}</MenuItem>
+            ))}
+          </Select>
           <div>
             <Button onClick={handleCancelAdd}>
               Cancel
