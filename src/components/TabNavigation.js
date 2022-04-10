@@ -9,11 +9,9 @@ import {
 
 import {Tab, Tabs} from '@mui/material';
 
-// import {theme} from '../helpers/theme';
 import Home from './Home';
 import Clients from './Clients';
 
-// Now it works only for patterns with /:pattern/ but not with /sth:pattern/
 const pathSwapper = (from, to, pathname) => {
   const res = matchPath(from, pathname);
   if (!res) return res;
@@ -47,9 +45,6 @@ const Redirect = ({from, to, ...props}) => {
 const allViews = [
   {path: '/home', view: <Home />},
   {path: '/clients', view: <Clients />},
-  // {path: '/docs', view: <Docs />},
-  // {path: '/transactions', view: <Transactions />},
-  // {path: '/transactions/log/:id/:step', view: <Log />},
 ];
 
 const createTabs = arr => {

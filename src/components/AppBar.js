@@ -1,10 +1,11 @@
+import {useEffect} from 'react';
 import AppBarMui from '@mui/material/AppBar';
 import { Typography  } from '@mui/material';
 
 import {format} from 'date-fns';
 
 const AppBar = props => {
-  const date = format(new Date(), 'H:mm dd/MM/yyyy');
+  const date = format(new Date(), 'dd/MM/yyyy');
 
   return (
     <AppBarMui >
