@@ -7,6 +7,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TextField,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,8 +17,19 @@ const HEADS = ['Nr.','Name', 'Price', 'Time', ''];
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const URL = 'http://localhost:1234/';
 
+const createEmptyClient = () => ({
+  'name': '',
+  'surname': '',
+  'price': null,
+  'start': null,
+  'time': null,
+  'week_day': null,
+});
+
 const Clients = props => {
-  const [client, setClients] = useState();
+  const [clients, setClients] = useState();
+  const [client, setClient] = useState();
+  const [add, setAdd] = useState(false);
   const [download, setDownload] = useState(true);
 
   const fetchData = () => {
@@ -38,31 +50,53 @@ const Clients = props => {
     setDownload(true)
   }
 
+  const handleAddClient = () => setAdd(true);
+  const handleCancelAdd = () => setAdd(false);
+  const handleAddClientChange = key => e => {
+    setClient({...client, [key]: e.target.value});
+  };
+
   const addNewClient = () => {
+
     fetch(URL + 'patient', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body:JSON.stringify({
-        'name': 'Joanna',
-        'surname': 'Kowalska',
-        'price': 140,
-        'start': Date.now(),
-        'time': 19,
-        'week_day': 1,
-      })
+      body:JSON.stringify(client)
     })
       .then(res => res.json())
       .then(res => console.log(res))
     setDownload(true);
+    setClient(null)
+    setAdd(false)
   };
 
   return(
     <div style={{maxWidth: 600, margin: 'auto'}}>
-      <Button onClick={addNewClient}>
+      <Button onClick={handleAddClient}>
         Add new Client
       </Button>
+      {add && (
+        <div>
+          {['name', 'surname', 'price', 'time'].map(t => (
+            <TextField
+              label={t}
+              size="small"
+              value={client && client[t]}
+              onChange={handleAddClientChange(t)}
+            />
+          ))}
+          <div>
+            <Button onClick={handleCancelAdd}>
+              Cancel
+            </Button>
+            <Button onClick={addNewClient}>
+             Save
+            </Button>
+          </div>
+        </div>
+      ) }
       <Table >
         <TableHead>
           <TableRow>
@@ -72,7 +106,7 @@ const Clients = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-        {client?.map((c, idx)=> (
+        {clients?.map((c, idx)=> (
           <TableRow key={c._id}>
             <TableCell>{idx + 1}</TableCell>
             <TableCell> {c.name} {c.surname} </TableCell>
