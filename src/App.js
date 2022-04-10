@@ -1,26 +1,36 @@
-import {useState, useEffect} from 'react';
+import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 import './App.css';
+import AppBar from './components/AppBar';
+import Clients from './components/Clients';
+import TabNavigation from './components/TabNavigation';
 
-const App = () => {
-  const [client, setClients] = useState();
+const MainAppFrame = ({component}) => (
+  <div style={styles.mainAppFrame}>
+    <AppBar />
+    <div style={styles.insideFrame}>{component}</div>
+  </div>
+);
 
-  const fetchData = () => {
-    fetch('http://localhost:1234/ini')
-      .then(res => res.json())
-      .then(res => setClients(res))
-  };
+const App = () => (
+  <Router>
+    <Routes>
+      <Route
+        path="/*"
+        element={<MainAppFrame component={<TabNavigation />} />}
+      />
+    </Routes>
+  </Router>
+);
 
-  useEffect(() => {
-    fetchData();
-  },[])
-
-  return (
-    <div className="Homie">
-      {client?.map(c => (
-        <div>{c.name} {c.surname} {c.price + 'zł'} {c.time + ':00'}</div>
-      ))}
-    </div>
-  );
-}
+const styles = {
+  mainAppFrame: {
+    minHeight: '100vh',
+  },
+  insideFrame: {
+    maxWidth: 1000,
+    margin: 'auto',
+    padding: 12,
+  },
+};
 
 export default App;
