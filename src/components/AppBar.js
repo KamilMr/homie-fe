@@ -1,4 +1,3 @@
-import {useEffect} from 'react';
 import AppBarMui from '@mui/material/AppBar';
 import { Typography  } from '@mui/material';
 
