@@ -7,13 +7,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Select,
-  MenuItem,
-  TextField,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+
+import NewClient from './NewClient';
 
 const HEADS = ['Nr.','Name', 'Price', 'Time', ''];
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -53,26 +52,10 @@ const Clients = props => {
   }
 
   const handleAddClient = () => setAdd(true);
-  const handleCancelAdd = () => setAdd(false);
   const handleAddClientChange = key => e => {
     setClient({...client, [key]: e.target.value});
   };
 
-  const addNewClient = () => {
-
-    fetch(URL + 'patient', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body:JSON.stringify(client)
-    })
-      .then(res => res.json())
-      .then(res => console.log(res))
-    setDownload(true);
-    setClient(createEmptyClient())
-    setAdd(false)
-  };
 
   return(
     <div style={{maxWidth: 600, margin: 'auto'}}>
@@ -80,34 +63,16 @@ const Clients = props => {
         Add new Client
       </Button>
       {add && (
-        <div>
-          {['name', 'surname', 'price', 'time'].map(t => (
-            <TextField
-              key={t}
-              label={t}
-              size="small"
-              value={client && client[t]}
-              onChange={handleAddClientChange(t)}
-            />
-          ))}
-          <Select
-            value={client?.week_day}
-            onChange={handleAddClientChange('week_day')}
-          >
-            {DAYS.map((d, idx) => (
-              <MenuItem key={d} value={idx}>{d}</MenuItem>
-            ))}
-          </Select>
-          <div>
-            <Button onClick={handleCancelAdd}>
-              Cancel
-            </Button>
-            <Button onClick={addNewClient}>
-             Save
-            </Button>
-          </div>
-        </div>
-      ) }
+        <NewClient
+          client={client}
+          setAdd={setAdd}
+          setClient={setClient}
+          setDownload={setDownload}
+          handleAddClientChange={handleAddClientChange}
+          createEmptyClient={createEmptyClient}
+          URL={URL}
+        />
+      )}
       <Table >
         <TableHead>
           <TableRow>
